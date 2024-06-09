@@ -1,33 +1,56 @@
-#include <iostream>
+#include "Matrix.h"
+#include "cudaFunction.cu"
 
 template <typename T>
-__global__ void dkernal(T* d_M, T* d_M1, T* d_M2, int rows, int cols, int r_c) {
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    int j = blockIdx.y * blockDim.y + threadIdx.y;
-    if (i < rows && j < cols) {
-        d_M[i * cols + j] = 0;
-        for (int k = 0; k < r_c; k++) {
-            d_M[i * cols + j] += d_M1[i * r_c + k] * d_M2[k * cols + j];
+Matrix<T>::Matrix() {
+    rows = 0;
+    cols = 0;
+    vector = nullptr;
+}
+template <typename T>
+Matrix<T>::Matrix(int r, int c) : rows(r), cols(c) {
+    vector = new T[r * c];
+}
+template <typename T>
+T& Matrix<T>::operator()(int r, int c) {
+    return vector[r * cols + c];
+}
+template <typename T>
+const T& Matrix<T>::operator()(int r, int c) const {
+    return vector[r * cols + c];
+}
+template <typename T>
+T* Matrix<T>::data() {
+    return vector;
+}
+template <typename T>
+int Matrix<T>::getRows() {
+    return rows;
+}
+template <typename T>
+int Matrix<T>::getCols() {
+    return cols;
+}
+template <typename T>
+unsigned int Matrix<T>::bytes() {
+    return rows * cols * sizeof(T);
+}
+template<typename T>
+void Matrix<T>::print(){
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            std::cout<<(*this)(i,j)<<" ";
         }
+        std::cout<<"\n";
     }
 }
-
-template<typename T>
-void cudaMultiply(T* M1,T* M2,T* M,int rows, int cols,int r_c){
-    unsigned int size1=rows*r_c*sizeof(T);
-    unsigned int size2=r_c*cols*sizeof(T);
-    unsigned int size=rows*cols*sizeof(T);
-    T *d_M1,*d_M2,*d_M;
-    cudaMalloc(&d_M,size);
-    cudaMalloc(&d_M1,size1);
-    cudaMalloc(&d_M2,size2);
-    cudaMemcpy(d_M1,M1,size1,cudaMemcpyHostToDevice);
-    cudaMemcpy(d_M2,M2,size2,cudaMemcpyHostToDevice);
-    dim3 block(16,16);
-    dim3 grid((rows+blockDim.x-1)/blockDim.x,(cols+blockDim.y-1)/blockDim.y);
-    dkernal<<<grid,block>>>(d_M,d_M1,d_M2,rows,cols,r_c);
-    cudaMemcpy(M,d_M,size,cudaMemcpyDeviceToHost);
-    cudaFree(d_M);
-    cudaFree(d_M1);
-    cudaFree(d_M2);
+template <typename T>
+Matrix<T> Matrix<T>::operator*(Matrix<T>& M) {
+    return multiply(*this, M);
+}
+template <typename T>
+Matrix<T> Matrix<T>::multiply(Matrix<T>& M1, Matrix<T>& M2) {
+    Matrix M(M1.getRows(), M2.getCols());
+    cudaMultiply(M1.data(),M2.data(),M.data(),M1.getRows(),M2.getCols(),M1.getCols());
+    return M;
 }
