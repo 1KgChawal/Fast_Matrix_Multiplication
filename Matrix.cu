@@ -32,7 +32,16 @@ int Matrix<T>::getCols() {
 }
 template <typename T>
 unsigned int Matrix<T>::bytes() {
-    return r * c * sizeof(T);
+    return rows * cols * sizeof(T);
+}
+template<typename T>
+void Matrix<T>::print(){
+    for(int i=0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            std::cout<<(*this)(i,j)<<" ";
+        }
+        std::cout<<"\n";
+    }
 }
 template <typename T>
 Matrix<T> Matrix<T>::operator*(Matrix<T>& M) {
