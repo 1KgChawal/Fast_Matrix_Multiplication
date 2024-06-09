@@ -45,7 +45,7 @@ __global__ void dkernal(T* d_M, T* d_M1, T* d_M2, int rows, int cols, int r_c) {
     if (i < rows && j < cols) {
         d_M[i * cols + j] = 0;
         for (int k = 0; k < r_c; k++) {
-            d_M[i * cols + j] += d_M1[i * r_c + k] + d_M2[k * cols + j];
+            d_M[i * cols + j] += d_M1[i * r_c + k] * d_M2[k * cols + j];
         }
     }
 }
@@ -53,7 +53,7 @@ template <typename T>
 Matrix<T> Matrix<T>::multiply(Matrix<T>& M1, Matrix<T>& M2) {
     Matrix M(M1.getRows(), M2.getCols());
     int k = M1.getCols();
-    T *d_M1, d_M2, d_M;
+    T *d_M1, *d_M2, *d_M;
     cudaMalloc(&d_M1, M1.bytes());
     cudaMalloc(&d_M2, M2.bytes());
     cudaMalloc(&d_M, M.bytes());
@@ -63,5 +63,8 @@ Matrix<T> Matrix<T>::multiply(Matrix<T>& M1, Matrix<T>& M2) {
     dim3 grid((M.getRows() + blockDim.x - 1) / blockDim.x, (M.getCols() + blockDim.y - 1) / blockDim.y);
     dkernal<<<grid, block>>>(d_M, d_M1, d_M2, M.getRows(), M.getCols(), k);
     cudaMemcpy(M.data(), d_M, M.bytes(), cudaMemcpyDeviceToHost);
+    cudaFree(d_M);
+    cudaFree(d_M1);
+    cudaFree(d_M2);
     return M;
 }
