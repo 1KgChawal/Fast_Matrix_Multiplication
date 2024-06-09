@@ -1,0 +1,33 @@
+# Compiled Object files
+*.o
+*.so
+*.dll
+*.dylib
+
+# Executables
+*.exe
+*.out
+
+# Temporary files
+*.swp
+*~
+
+# Ignore build directories
+/build/
+/bin/
+/lib/
+
+# Ignore IDE-specific files and directories
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore any sensitive or environment-specific files (e.g., configuration files)
+config.ini
+credentials.json
