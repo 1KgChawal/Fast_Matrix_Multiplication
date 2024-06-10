@@ -6,7 +6,7 @@ int main(){
     std::cin>>r1>>c1;
     Matrix<int> M1(r1,c1);
     for(int i=0;i<r1;i++){
-        for(int j=0;j<r1;j++){
+        for(int j=0;j<c1;j++){
             std::cin>>M1(i,j);
         }
     }
