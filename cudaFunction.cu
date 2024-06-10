@@ -1,5 +1,5 @@
 #include <iostream>
-#include "cudaFunction.h"
+#include "cudaFunction.h.cu"
 
 template <typename T>
 __global__ void dkernal(T* d_M, T* d_M1, T* d_M2, int rows, int cols, int r_c) {
