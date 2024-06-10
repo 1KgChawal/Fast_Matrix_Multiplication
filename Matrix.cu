@@ -1,5 +1,5 @@
 #include "Matrix.h"
-#include "cudaFunction.cu"
+#include "cudaFunction.h"
 
 template <typename T>
 Matrix<T>::Matrix() {
