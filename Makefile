@@ -6,6 +6,8 @@ EXECUTABLE=matrix_multiply.out
 
 OBJECTS=main.o Matrix.o cudaFunction.o
 
+all: $(EXECUTABLE)
+
 cudaFunction.o: cudaFunction.cu cudaFunction.h.cu
 	$(NVCC) $(FLAG) -c -o $@ $<
 
