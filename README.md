@@ -4,5 +4,6 @@ To run this project you need to have nvcc compiler.
 
 After cloning the repository open the terminal in the cloned directory and run make command.
 
+Run the executable matrix_multiply.out.
 First enter rows and columns of first matrx and then enter the values of the matrix.
 After that enter rows and columns of second matrx and then enter the values of the matrix.
