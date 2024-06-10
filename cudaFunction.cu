@@ -25,7 +25,7 @@ void cudaMultiply(T* M1,T* M2,T* M,int rows, int cols,int r_c){
     cudaMemcpy(d_M1,M1,size1,cudaMemcpyHostToDevice);
     cudaMemcpy(d_M2,M2,size2,cudaMemcpyHostToDevice);
     dim3 block(16,16);
-    dim3 grid((rows+16-1)/16,(cols+16-1)/16);
+    dim3 grid((rows+block.x-1)/block.x,(cols+block.y-1)/block.y);
     dkernal<<<grid,block>>>(d_M,d_M1,d_M2,rows,cols,r_c);
     cudaMemcpy(M,d_M,size,cudaMemcpyDeviceToHost);
     cudaFree(d_M);
