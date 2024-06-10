@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Matrix.h"
+#include "Matrix.cu"
 
 int main(){
     int r1,c1;

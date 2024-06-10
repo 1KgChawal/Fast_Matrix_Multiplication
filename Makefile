@@ -15,7 +15,7 @@ main.o: main.cu Matrix.h
 	$(NVCC) $(FLAG) -c -o $@ $<
 
 $(EXECUTABLE): $(OBJECTS)
-	$(NVCC) $(FLAG) -o $@ $<
+	$(NVCC) $(FLAG) -o $@ $^
 
 clean:
 	rm -rf *.o *.out
