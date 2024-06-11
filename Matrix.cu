@@ -35,24 +35,28 @@ template <typename T>
 unsigned int Matrix<T>::bytes() {
     return rows * cols * sizeof(T);
 }
-template<typename T>
-void Matrix<T>::print(){
-    std::cout<<"-----------------------\n";
-    for(int i=0;i<rows;i++){
-        for(int j=0;j<cols;j++){
-            std::cout<<(*this)(i,j)<<" ";
+template <typename T>
+void Matrix<T>::print() {
+    std::cout << "-----------------------\n";
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            std::cout << (*this)(i, j) << " ";
         }
-        std::cout<<"\n";
+        std::cout << "\n";
     }
-    std::cout<<"-----------------------\n";
+    std::cout << "-----------------------\n";
 }
 template <typename T>
 Matrix<T> Matrix<T>::operator*(Matrix<T>& M) {
+    if(this->getCols()!=M.getRows()){
+        std::cerr<<"Matrix not multiplicable!"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
     return multiply(*this, M);
 }
 template <typename T>
 Matrix<T> Matrix<T>::multiply(Matrix<T>& M1, Matrix<T>& M2) {
     Matrix M(M1.getRows(), M2.getCols());
-    cudaMultiply(M1.data(),M2.data(),M.data(),M1.getRows(),M2.getCols(),M1.getCols());
+    cudaMultiply(M1.data(), M2.data(), M.data(), M1.getRows(), M2.getCols(), M1.getCols());
     return M;
 }
